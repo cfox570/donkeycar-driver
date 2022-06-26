@@ -1,5 +1,5 @@
 # donkeycar-driver
-### A YAML driven driver script as an alternative to the standard manage.py script to run a Donkeycar.
+#### A YAML driven driver script as an alternative to the standard manage.py script to run a Donkeycar.
 
 This repository is intended to extend the functionality of the standard [Donkeycar framework](https://github.com/autorope/donkeycar).
 
@@ -9,7 +9,7 @@ The DonkeyCar framework uses a very large and complex template script installed 
 
 There are three steps to including a part into the vehicle. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps. The parameters for each of the steps is specified in a YAML file.
 
-# Command Line
+### Command Line
 ```
 Usage:
     driver.py [--yaml=<yamlfile>] [--myconfig=<filename>] [--model=<model>] 
