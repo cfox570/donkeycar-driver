@@ -1,16 +1,26 @@
 # donkeycar-driver
 ### A YAML driven driver script as an alternative to the standard manage.py script to run a Donkeycar.
 
-This repository is intended to extend the functionality of the standard DonkeyCar framework found at 
-The DonkeyCar framework uses a very large and complex template manage.py to assemble parts. The python script uses the config.py and many ‘if statements’ to decide which parts are included into the vehicle. To add a new part, the developer must dig into this complex and add the new part with appropiate if statements.
+This repository is intended to extend the functionality of the standard DonkeyCar framework found at https://github.com/autorope/donkeycar.
 
-Proposed alternative: YAML part configuration
+The DonkeyCar framework uses a very large and complex template script installed as manage.py to assemble car parts and run the vehicle code. The python script uses the config.py and many ‘if statements’ to decide which parts are included into the vehicle. This comprehensive file is difficult to modify. Debugging and adding custom parts is cumbersome. To add a new part, the developer must dig into this complex script and add the new part with appropiate "if statements". The ideal solution for the manage.py would only include parts that are in use by the car or simulated car.  
 
-Since parts have a standard structure, a YAML file can be used to identify to identify which parts to include. If the YAML file contains every part, a comment symbol # can be used to prevent the inclusion of the part.
+## driver.py
 
-Instantiating a part requires two sets of parameters. 1) Class Parameters are sent to the Class to configure the object. 2) Vehicle run parameters are used to control inputs, outputs, threading and the run condition.
+There are three steps to including a part into the vehicle. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps. The parameters for each of the steps is specified in a YAML file.
 
-Class Parameters: Since the values of these are typically setup in the config/myconfig files, I propose that the Class definition of parts be simplified to accept one parameter: cfg which holds all of the configuration parameters.
+### Command Line
+```
+Usage:
+    driver.py [--yaml=<yamlfile>] [--myconfig=<filename>] [--model=<model>] 
+      [--type=(linear|categorical|tflite_linear|tensorrt_linear)] [--meta=<key:value> ...]
 
-Vehicle Parameters: I would argue that these are really Part Parameters and should be set by the Part itself.
+Options:
+    -h --help               Show this screen.
+    --yaml=yamlfile         Specify yaml file to use. Default is PARTS_PATH in the config file
+    --myconfig=filename     Specify myconfig file to use. [default: myconfig.py]
+    --model=model           Path to model. Default is MODEL_PATH in the config file
+    --type=type             Type of model. Default is DEFAULT_MODEL_TYPE in the config file
+    --meta=<key:value>      Key/Value strings describing describing a piece of meta data about this drive. Option may be used more than once.
+```
 
