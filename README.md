@@ -1,9 +1,9 @@
 # donkeycar-driver
 ### A YAML driven driver script as an alternative to the standard manage.py script to run a Donkeycar.
 
-This repository is intended to extend the functionality of the standard DonkeyCar framework found at https://github.com/autorope/donkeycar.
+This repository is intended to extend the functionality of the standard [Donkeycar framework](https://github.com/autorope/donkeycar).
 
-The DonkeyCar framework uses a very large and complex template script installed as manage.py to assemble car parts and run the vehicle code. The python script uses the config.py and many ‘if statements’ to decide which parts are included into the vehicle. This comprehensive file is difficult to modify. Debugging and adding custom parts is cumbersome. To add a new part, the developer must dig into this complex script and add the new part with appropiate "if statements". The ideal solution for the manage.py would only include parts that are in use by the car or simulated car.  
+The DonkeyCar framework uses a very large and complex template script installed as manage.py to assemble car parts and run the vehicle. The python script uses the config.py/myconfig.py and many ‘if statements’ to decide which parts are included into the vehicle. This comprehensive file is difficult to modify. Debugging and adding custom parts is cumbersome. To add a new part, the developer must dig into this complex script and add the new part with appropiate "if statements". The ideal solution for the manage.py would only include parts that are in use by the car or simulated car.  
 
 ## driver.py
 
