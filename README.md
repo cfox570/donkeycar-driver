@@ -17,11 +17,18 @@ Usage:
 
 Options:
     -h --help               Show this screen.
-    --yaml=yamlfile         Specify yaml file to use. Default is PARTS_PATH in the config file
+    --yaml=yamlfile         Specify yaml file to use. Default is PARTS_PATH in the config file.
     --myconfig=filename     Specify myconfig file to use. [default: myconfig.py]
-    --model=model           Path to model. Default is MODEL_PATH in the config file
-    --type=type             Type of model. Default is DEFAULT_MODEL_TYPE in the config file
-    --meta=<key:value>      Key/Value strings describing describing a piece of meta data about this drive. 
+    --model=model           Path to model. Default is MODEL_PATH in the config file.
+    --type=type             Type of model. Default is DEFAULT_MODEL_TYPE in the config file.
+    --meta=<key:value>      Key/Value strings describing describing a piece of meta data that will be
+                            stored as metada into the manifest.json file when storing tub data.
                             Option may be used more than once.
+
+Examples:
+    driver.py
+    driver.py --yaml parts-simple.py
+    driver.py --meta 
+
 ```
 
