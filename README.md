@@ -42,4 +42,4 @@ Examples:
 
 ```
 
-## YAML File <default: parts.yml>
+## YAML Parts File
