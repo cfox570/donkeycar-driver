@@ -21,6 +21,7 @@ Options:
     --myconfig=filename     Specify myconfig file to use. [default: myconfig.py]
     --model=model           Path to model. Default is MODEL_PATH in the config file
     --type=type             Type of model. Default is DEFAULT_MODEL_TYPE in the config file
-    --meta=<key:value>      Key/Value strings describing describing a piece of meta data about this drive. Option may be used more than once.
+    --meta=<key:value>      Key/Value strings describing describing a piece of meta data about this drive. 
+                            Option may be used more than once.
 ```
 
