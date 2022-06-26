@@ -17,7 +17,7 @@ The DonkeyCar framework uses a very large and complex template script installed 
 
 ## driver.py
 
-There are three steps to including a part into the vehicle. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps. The parameters for each of the steps is specified in a YAML file.
+The driver script works like the standard manage.py script with similar command line parameters. The new optional parameter allows specification of filename for the yaml file. 
 
 ### Command Line
 ```
@@ -41,5 +41,8 @@ Examples:
     driver.py --meta 
 
 ```
+
+There are three steps to including a part into the vehicle. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps. The parameters for each of the steps is specified in a YAML file.
+
 
 ## YAML Parts File
