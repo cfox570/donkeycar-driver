@@ -1,5 +1,5 @@
 # donkeycar-driver
-###A YAML driven driver script as an alternative to the standard manage.py script to run a Donkeycar.
+### A YAML driven driver script as an alternative to the standard manage.py script to run a Donkeycar.
 
 The current implementation of DonkeyCar uses a very large and complex template manage.py to assemble parts. The python script uses the config.py and many ‘if statements’ to decide which parts are included into the vehicle. To add a new part, the developer must dig into this complex and add the new part with appropiate if statements.
 
