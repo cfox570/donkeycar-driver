@@ -79,6 +79,6 @@ parts:
 * **inputs:** Specifies the inputs the part requires at runtime. Provide the list of inputs separated by commas. The list may be empty specified by [].
 * **outputs:** Specifies the outputs the part generates at runtime. Provide the list of outputs separated by commas. The list may be empty specified by [].
 * **threaded:** -Boolean- This is an optional parameter.  Specify **True** to indicate the part is threaded or **False** to indicate the part is NOT threaded.
-* **run_condition:**  -value-  This is an optional parameter. Only include it is required to control running the part based upon a vehicle Boolean parameter *or replace the value with False to prevent the run_condition from controlling the part.*
+* **run_condition:**  -value-  This is an optional parameter. Include this parameter when another boolean parameter is required to control running the part. *Replace the value with True to force the part to run.*
 
 ### YAML Example Files
