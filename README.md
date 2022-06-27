@@ -44,5 +44,7 @@ Examples:
 
 There are three steps to including a part into the vehicle. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps. The parameters for each of the steps is specified in a YAML file.
 
+In addition to the code to add parts from module files, the standard manage.py script contains embedded parts; DriveMode, RecordTracker. There is also some "glue" code to create the parameters for the parts. This code was moved to helpers.py. In the future, this code should be included in the appropriate parts module script files.
+
 
 ## YAML Parts File
