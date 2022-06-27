@@ -27,10 +27,10 @@ Usage:
 
 Options:
     -h --help               Show this screen.
-    --yaml=yamlfile         Specify yaml file to use. Default is PARTS_PATH in the config file.
+    --yaml=yamlfile         Specify yaml file to use. Default is PARTS_PATH in the config.py or myconfig.py.
     --myconfig=filename     Specify myconfig file to use. [default: myconfig.py]
-    --model=model           Path to model. Default is MODEL_PATH in the config file.
-    --type=type             Type of model. Default is DEFAULT_MODEL_TYPE in the config file.
+    --model=model           Path to model. Default is MODEL_PATH in the config.py or myconfig.py.
+    --type=type             Type of model. Default is DEFAULT_MODEL_TYPE in the config.py or myconfig.py.
     --meta=<key:value>      Key/Value strings describing describing a piece of meta data that will be
                             stored as metada into the manifest.json file when storing tub data.
                             Option may be used more than once.
@@ -44,7 +44,36 @@ Examples:
 
 There are three steps to including a part into the vehicle. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps. The parameters for each of the steps is specified in a YAML file.
 
-In addition to the code to add parts from module files, the standard manage.py script contains embedded parts; DriveMode, RecordTracker. There is also some "glue" code to create the parameters for the parts. This code was moved to helpers.py. In the future, this code should be included in the appropriate parts module script files.
+### helpers.py
+In addition to the code to add parts from module files, the standard manage.py script contains embedded parts; DriveMode, RecordTracker. There is also some "glue" code to create the parameters for the parts. This code was moved to helpers.py. The part AI_Pilot was added since instantiating the Keras AI part does not follow the standard pattern. In the future, this code could be included in the appropriate parts module script files.
 
 
-## YAML Parts File
+## Structure of the YAML Parts File
+Comments can be embedded with the pound/sharp sign #. All characters to the right are ignored. Insert the pound # in front of any of the optional arguments to have them ignored. Like python, indented lines are required to associated the parameters of a definition.  Indents shown below are required for each type of parameter. Colons are required. Do not include hyphens when filling in the values. String values DO NOT require quotes.  *All the parameters below can be found in manage.py.*  
+
+```
+parts:
+    -partname-:
+        class:          -classname-
+        module:         -modulename-
+        enable:         -Boolean-
+        args:
+            -argument1-:    -value-
+            -argument2-:    -value-
+        inputs:         -[value1,value2]-
+        outputs:        -[value1,value2]-
+        threaded:       -Boolean-
+        run_condition:  -value-
+```
+* **parts:** The first required token in the file starting in the first column.
+* **-partname-**: Give each part an arbitrary unique part name. You can specify multiple parts with the same classname as long as the partname is unique.
+* **class:**  -classname- Specify the class name of the part.
+* **module:** -modulename- Specify the module/file name where the part is defined.
+* **wenable:** -Boolean- Specify **True** to include the part or **False** to ignore the definition
+* **args:**  Specifies the arguments for initializing the part. List each -argument- and -value- or a separate line. if no arguments are needed, use {} on                  the same line. Values can be specified explicitly (ex. 0.0, 27, PICAM) or referencing the config parameters. The special keyword **cfg** is used to specify the object created from config.py/myconfig.py. When specifying arguments, use cfg refers to the whole object or use cfg.NAME (ex. cfg.DRIVE_LOOP_HZ) to specify a specific value.
+* **inputs:** Specifies the inputs the part requires at runtime. Provide the list of inputs separated by commas. The list may be empty specified by [].
+* **outputs:** Specifies the outputs the part generates at runtime. Provide the list of outputs separated by commas. The list may be empty specified by [].
+* **threaded:** -Boolean- This is an optional parameter.  Specify **True** to indicate the part is threaded or **False** to indicate the part is NOT threaded.
+* **run_condition:**  -value-  This is an optional parameter. Only include it is required to control running the part based upon a vehicle Boolean parameter *or replace the value with False to prevent the run_condition from controlling the part.*
+
+## YAML Example Files
