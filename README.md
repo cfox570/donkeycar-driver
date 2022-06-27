@@ -5,21 +5,25 @@ This repository is intended to extend the functionality of the standard [Donkeyc
 
 The DonkeyCar framework uses a very large and complex template script installed as manage.py to assemble car parts and run the vehicle. The python script uses the config.py/myconfig.py and many ‘if statements’ to decide which parts are included into the vehicle. This comprehensive file is difficult to modify. Debugging and adding custom parts is cumbersome. To add a new part, the developer must dig into this complex script and add the new part with appropiate "if statements". The ideal solution for the manage.py would only include parts that are in use by the car or simulated car.  
 
-## Setup
+#### Setup
 * Step 1 - Install yaml module - _pip install pyyaml_
-* Step 2 - Copy **driver.py** to your **mycar** folder
-* Step 3 - Create a **parts** folder in your **mycar** folder
-* Step 4 - Copy **helpers.py** to the **parts** folder
-* Step 5 - Copy the **parts.yml** to your **mycar** folder
-* Step 6 - Edit the **parts.yml** to match your vehicle configuration
-* Step 7 - Run your vehicle as specifed below
+* Step 2 - Add the following lines to the myconfig.py file:
+```
+import os
+CAR_PATH = PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
+PARTSYAML_PATH         = os.path.join(CAR_PATH, 'parts.yml')
+```
+* Step 3 - Copy **driver.py** to your **mycar** folder
+* Step 4 - Create a **parts** folder in your **mycar** folder
+* Step 5 - Copy **helpers.py** to the **parts** folder
+* Step 6 - Copy the **parts.yml** to your **mycar** folder
+* Step 7 - Edit the **parts.yml** to match your vehicle configuration
+* Step 8 - Run your vehicle as specifed below
 
 
-## driver.py
+#### Command Line
+The driver script works like the standard manage.py script with similar command line parameters. The default name for the yaml parts file is included in the myconfig.py file. The new optional parameter allows specification of filename for the yaml file on the fly. 
 
-The driver script works like the standard manage.py script with similar command line parameters. The new optional parameter allows specification of filename for the yaml file. 
-
-### Command Line
 ```
 Usage:
     driver.py [--yaml=<yamlfile>] [--myconfig=<filename>] [--model=<model>] 
@@ -27,7 +31,7 @@ Usage:
 
 Options:
     -h --help               Show this screen.
-    --yaml=yamlfile         Specify yaml file to use. Default is PARTS_PATH in the config.py or myconfig.py.
+    --yaml=yamlfile         Specify yaml file to use. Default is PARTSYAML_PATH in the config.py or myconfig.py.
     --myconfig=filename     Specify myconfig file to use. [default: myconfig.py]
     --model=model           Path to model. Default is MODEL_PATH in the config.py or myconfig.py.
     --type=type             Type of model. Default is DEFAULT_MODEL_TYPE in the config.py or myconfig.py.
@@ -42,14 +46,15 @@ Examples:
 
 ```
 
-There are three steps to including a part into the vehicle. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps. The parameters for each of the steps is specified in a YAML file.
+### driver.py and helpers.py
 
-### helpers.py
+There are three steps to including a part into the vehicle in the manage.py. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps in a generic way. The parameters for each of the steps is specified in a YAML file.
+
 In addition to the code to add parts from module files, the standard manage.py script contains embedded parts; DriveMode, RecordTracker. There is also some "glue" code to create the parameters for the parts. This code was moved to helpers.py. The part AI_Pilot was added since instantiating the Keras AI part does not follow the standard pattern. In the future, this code could be included in the appropriate parts module script files.
 
 
-## Structure of the YAML Parts File
-Comments can be embedded with the pound/sharp sign #. All characters to the right are ignored. Insert the pound # in front of any of the optional arguments to have them ignored. Like python, indented lines are required to associated the parameters of a definition.  Indents shown below are required for each type of parameter. Colons are required. Do not include hyphens when filling in the values. String values DO NOT require quotes.  *All the parameters below can be found in manage.py.*  
+### Structure of the YAML Parts File
+The YAML parts file specifies all the parts to be included into the vehicle. Each part contains an enable parameter that is used to disable the part for debugging.  Like python, indented lines are required to associated the parameters of a definition.  Indents shown below are required for each type of parameter. Colons are required. Do not include hyphens when filling in the values. String values DO NOT require quotes.  *All the parameters below can be found in manage.py.*  Comments can be embedded with the pound/sharp sign #. All characters to the right are ignored. Insert the pound # in front of any of the optional arguments to have them ignored. 
 
 ```
 parts:
@@ -76,4 +81,4 @@ parts:
 * **threaded:** -Boolean- This is an optional parameter.  Specify **True** to indicate the part is threaded or **False** to indicate the part is NOT threaded.
 * **run_condition:**  -value-  This is an optional parameter. Only include it is required to control running the part based upon a vehicle Boolean parameter *or replace the value with False to prevent the run_condition from controlling the part.*
 
-## YAML Example Files
+### YAML Example Files
