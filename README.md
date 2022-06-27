@@ -50,7 +50,7 @@ Examples:
 
 There are three steps to including a part into the vehicle in the manage.py. 1) Import the module/calls 2) Instantiate the part with initilization parameters 3) Add the part to the vehicle. The driver.py script performs these three steps in a generic way. The parameters for each of the steps is specified in a YAML file.
 
-In addition to the code to add parts from module files, the standard manage.py script contains embedded parts; DriveMode, RecordTracker. There is also some "glue" code to create the parameters for the parts. This code was moved to helpers.py. The part AI_Pilot was added since instantiating the Keras AI part does not follow the standard pattern. In the future, this code could be included in the appropriate parts module script files.
+In addition to the code to add parts from module files, the standard manage.py script contains embedded parts; DriveMode, RecordTracker. There is also some "glue" code to create the parameters for the parts. This code was moved to helpers.py. The part AI_Pilot was added since instantiating the Keras AI part does not follow the standard pattern. There is a other functionality included in manage.py that is not part of helper.py or drivers.py. This could be added as required by the developer to either the helpers.py or drivers.py or to a new parts file. 
 
 
 ### Structure of the YAML Parts File
