@@ -16,7 +16,7 @@ PARTSYAML_PATH         = os.path.join(CAR_PATH, 'parts.yml')
 * Step 3 - Copy **driver.py** to your **mycar** folder
 * Step 4 - Create a **parts** folder in your **mycar** folder
 * Step 5 - Copy **helpers.py** to the **parts** folder
-* Step 6 - Copy the **parts.yml** to your **mycar** folder
+* Step 6 - Copy one of the example yaml parts files as **parts.yml** to your **mycar** folder
 * Step 7 - Edit the **parts.yml** to match your vehicle configuration
 * Step 8 - Run your vehicle as specifed below
 
