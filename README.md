@@ -15,7 +15,7 @@ PARTSYAML_PATH         = os.path.join(CAR_PATH, 'parts.yml')
 ```
 * Step 3 - Copy **driver.py** to your **mycar** folder
 * Step 4 - Create a **parts** folder in your **mycar** folder
-* Step 5 - Copy **helpers.py** to the **parts** folder
+* Step 5 - Copy **helpers.py** to the **parts** folder. Put your custom developed parts in the parts folder as well.
 * Step 6 - Copy one of the example yaml parts files as **parts.yml** to your **mycar** folder
 * Step 7 - Edit the **parts.yml** to match your vehicle configuration
 * Step 8 - Run your vehicle as specifed below
@@ -73,7 +73,7 @@ parts:
 * **parts:** The first required token in the file starting in the first column.
 * **-partname-**: Give each part an arbitrary unique part name. You can specify multiple parts with the same classname as long as the partname is unique.
 * **class:**  -classname- Specify the class name of the part.
-* **module:** -modulename- Specify the module/file name where the part is defined.
+* **module:** -modulename- Specify the module/file name where the part is defined. Standard parts are specified as donkeycar.parts.<filename>. Custom parts stored in the mycar/parts folder are specified as parts.<filename>.
 * **wenable:** -Boolean- Specify **True** to include the part or **False** to ignore the definition
 * **args:**  Specifies the arguments for initializing the part. List each -argument- and -value- or a separate line. if no arguments are needed, use {} on                  the same line. Values can be specified explicitly (ex. 0.0, 27, PICAM) or referencing the config parameters. The special keyword **cfg** is used to specify the object created from config.py/myconfig.py. When specifying arguments, use cfg refers to the whole object or use cfg.NAME (ex. cfg.DRIVE_LOOP_HZ) to specify a specific value.
 * **inputs:** Specifies the inputs the part requires at runtime. Provide the list of inputs separated by commas. The list may be empty specified by [].
