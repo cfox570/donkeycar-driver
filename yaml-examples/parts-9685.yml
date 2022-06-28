@@ -1,0 +1,128 @@
+# parts.yml
+# Parts configuation to drive donkeycar and collect data for training a model
+# set enable to False to disable the part from inclusion into the vehicle
+
+# Donkey Car standard build using 9685 PWM controller board
+
+parts:
+    Camera:
+        class:      PiCamera
+        module:     donkeycar.parts.camera
+        enable:     True
+        args:
+            image_w:    160
+            image_h:    120
+            image_d:    3
+            framerate:  20
+            vflip:      True
+            hflip:      True
+        inputs:     []
+        outputs:    [cam/image_array]
+        threaded:   True
+
+    Controller:
+        class:      MyJoystickController
+        module:     parts.my_joystick
+        enable:     True
+        args:
+            throttle_dir:           -1.0 # Direction
+            throttle_scale:          0.6 # Scaling, must be positive
+            steering_scale:          1.0 # Scaling and direction
+            auto_record_on_throttle: True
+            ai_throttle_multiplier:  1.0
+        inputs:     [cam/image_array] 
+        outputs:    [user/angle, user/throttle, user/mode, recording]
+        threaded:   True
+    
+    PilotCondition:
+        module: parts.helpers
+        enable: True
+        class: PilotCondition
+        args: {}
+        inputs:  [user/mode] 
+        outputs: [run_pilot]
+
+    AI:
+        module: parts.helpers
+        enable: True
+        class: AI_Pilot
+        args:
+            cfg: cfg
+        inputs:  [cam/image_array] 
+        outputs: [pilot/angle, pilot/throttle]
+        run_condition: run_pilot
+
+    Tracker:
+        class:          RecordTracker
+        module:         parts.helpers
+        enable:         True
+        args:     
+            cfg:        cfg
+        inputs:         [tub/num_records]
+        outputs:        [records/alert]
+        run_condition:  recording
+
+    Launch:
+        module: donkeycar.parts.launch
+        enable: True
+        class: AiLaunch
+        args: 
+            launch_duration: cfg.AI_LAUNCH_DURATION
+            launch_throttle: cfg.AI_LAUNCH_THROTTLE
+            keep_enabled:    cfg.AI_LAUNCH_KEEP_ENABLED
+        inputs: [user/mode, pilot/throttle]
+        outputs: [pilot/throttle]
+        
+    DriveMode:
+        module: parts.helpers
+        enable: True
+        class: DriveMode
+        args:
+            multiplier: cfg.AI_THROTTLE_MULT
+        inputs:  [user/mode, user/angle, user/throttle, pilot/angle, pilot/throttle]
+        outputs: [angle, throttle]
+    
+    DataFiles:
+        module: donkeycar.parts.tub_v2
+        enable: True
+        class: TubWriter
+        args:
+            base_path: cfg.DATA_PATH
+            inputs:   [cam/image_array, user/angle, user/throttle, user/mode]
+            types:    [image_array, float, float, str]
+            metadata: cfg.USERMETADATA
+        inputs:  [cam/image_array,user/angle, user/throttle, user/mode]
+        outputs: [tub/num_records]
+        run_condition: recording
+
+    PWMDriveTrain_Steering:
+        class:      SteeringDriveTrain
+        module:     parts.helpers
+        enable:     True
+        args:
+            pin:        PCA9685.1:40.1
+            scale:      1.0
+            inverted:   False
+            left_p:     410
+            right_p:    290
+        inputs:     [angle] 
+        outputs:    []
+        threaded:   True
+   
+    PWMDriveTrain_Throttle:
+        class:      ThrottleDriveTrain
+        module:     parts.helpers
+        enable:     True
+        args:
+            pin:        PCA9685.1:40.0
+            scale:      1.0
+            inverted:   False
+            max_p:      420
+            zero_p:     370
+            min_p:      300
+        inputs:     [throttle] 
+        outputs:    []
+        threaded:   True
+       
+
+       
