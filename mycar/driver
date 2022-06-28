@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""
+version 1.01
+Assemble and drive a donkeycar.
+Parts are specified in parts.yml in the order they need to execute.
+
+Usage:
+    driver.py [--yaml=<yamlfile>] [--myconfig=<filename>] [--model=<model>] [--type=(linear|categorical|tflite_linear|tensorrt_linear)] [--meta=<key:value> ...]
+
+Options:
+    -h --help               Show this screen.
+    --yaml=yamlfile         Specify yaml file to use. Default is PARTSYAML_PATH in the config.py or myconfig.py.
+    --myconfig=filename     Specify myconfig file to use. [default: myconfig.py]
+    --model=model           Path to model. Default is MODEL_PATH in the config.py or myconfig.py.
+    --type=type             Type of model. Default is DEFAULT_MODEL_TYPE in the config.py or myconfig.py.
+    --meta=<key:value>      Key/Value strings describing describing a piece of meta data that will be
+                            stored as metada into the manifest.json file when storing tub data.
+                            Option may be used more than once.
+
+"""
+import sys
+import importlib
+from docopt import docopt
+import donkeycar as dk
+import yaml
+import logging
+
+logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.INFO)
+
+logger.setLevel(logging.getLevelName(logging.INFO))
+# ch = logging.StreamHandler()
+# ch.setFormatter(logging.Formatter('%(message)s'))
+# logger.addHandler(ch)
+
+
+#__________________________________ ASSEMBLE THE VEHICLE________________________
+
+def assemble(cfg):
+    #Initialize car
+    V = dk.vehicle.Vehicle()
+    jspart = None
+
+    # Load the YAML file specifying the parts
+    with open(cfg.PARTSYAML_PATH) as file:
+        try:
+            dict = yaml.safe_load(file)
+        except yaml.YAMLError as exception:
+            logger.fatal(exception)
+            return None
+    
+    parts = dict.get("parts")
+    if parts is None:
+        logger.fatal("parts.yml is missing the parts key")
+        raise Exception()
+
+    for partname, definition in parts.items():
+        logger.info(f"Processing {partname} ...")
+        # decode definition
+        themodule = None
+        theclass = None
+        theargs = None
+        theinputs = None
+        theoutputs = None
+        threaded = None
+        theruncondition = None
+        enable = None
+
+        for prop, value in definition.items():
+            if prop == 'module':
+                themodule = value
+            elif prop == 'class':
+                theclass = value
+            elif prop == 'args':
+                for key, dat in value.items():
+                    if isinstance(dat,str):
+                        if dat[0:3] == 'cfg':
+                            value[key] = eval(dat)
+                theargs = value
+            elif prop == 'inputs':
+                theinputs = value
+            elif prop == 'outputs':
+                theoutputs = value
+            elif prop == 'threaded':
+                threaded = value
+            elif prop == 'run_condition':
+                if isinstance(value, bool):
+                    if value is False:
+                        logger.fatal(f'Run Condition: value cannot be FALSE ')
+                        raise Exception()
+                    # else Run Condition is not required
+                else:
+                    theruncondition = value
+            elif prop == 'enable':
+                enable = value
+                if not enable:
+                    break # stop processing the entry
+            else:
+                logger.fatal(f'key "{prop}" is unknown')
+                raise Exception()
+                
+        if enable is None:
+            logger.fatal(f'Definition: enable is missing ')
+            raise Exception()
+        if not enable:
+            continue       
+        if themodule is None:
+            logger.fatal(f'Definition: the module is missing ')
+            raise Exception()            
+        if theclass is None:
+            logger.fatal(f'Definition: the class is missing ')
+            raise Exception()            
+        if theargs is None:
+            logger.fatal(f'Definition: the args are missing ')
+            raise Exception()            
+        if theinputs is None:
+            logger.fatal(f'Definition: the inputs are missing ')
+            raise Exception()       
+        if theoutputs is None:
+            logger.fatal(f'Definition: the outputs are missing ')
+            raise Exception()   
+        if threaded is None:
+            threaded = False    
+
+#         logger.info(f'{themodule} importing...')            
+        module = importlib.import_module(themodule)
+        
+        #create part object from <class_name>
+        part_class = getattr(module, theclass)
+        part = part_class(**theargs)
+        logger.debug(f'    {theclass} part created') # from {type(part.super())
+        logger.debug(f'      with {theargs}')
+        
+        #add part to vehicle
+        V.add(part, inputs=theinputs, outputs=theoutputs, threaded=threaded, run_condition=theruncondition)
+        logger.debug(f'    ... added to vehicle')
+        logger.debug(f'    Inputs  {theinputs}')
+        logger.debug(f'    Outputs {theoutputs}')
+        
+        if theclass == 'MyJoystickController':
+            jspart = part
+
+    if jspart is not None:
+        jspart.set_deadzone(cfg.JOYSTICK_DEADZONE)
+        jspart.print_controls()    
+           
+    return V
+
+#__________________________________ MAIN _________________________________________
+if __name__ == '__main__':
+
+    # load configuration and check command line options
+    args = docopt(__doc__)   
+    configuration = dk.load_config(myconfig=args['--myconfig'])
+    if args['--yaml']:
+        configuration.PARTSYAML_PATH = args['--yaml']
+    if args['--type']:
+         configuration.DEFAULT_MODEL_TYPE = args['--type']
+    if args['--model']:
+        configuration.MODEL_PATH = args['--model']
+
+    if not hasattr(configuration, 'USERMETADATA'):
+        configuration.USERMETADATA = []
+    if args['--meta']:
+        meta = args['--meta']
+        for i in range(len(meta)):
+            configuration.USERMETADATA.append(meta[i])
+        print('Metadata is', configuration.USERMETADATA)
+
+    # assemble vehicle with configuration parameters
+    logger.info('Assembling vehicle from parts...')
+    vehicle = assemble(configuration)
+    if vehicle is not None:
+        # start the vehicle
+        logger.info('Start your engines...')
+        vehicle.start(rate_hz=configuration.DRIVE_LOOP_HZ, max_loop_count=configuration.MAX_LOOPS)
+    logger.info('Vehicle end.\n')
+    
+    
+
