@@ -83,3 +83,5 @@ parts:
 
 ### [YAML Example Files](yaml-examples/README.md)
 
+### [YAML Example Files](yaml-examples)
+
