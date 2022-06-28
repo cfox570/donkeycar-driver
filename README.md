@@ -81,6 +81,5 @@ parts:
 * **threaded:** -Boolean- This is an optional parameter.  Specify **True** to indicate the part is threaded or **False** to indicate the part is NOT threaded.
 * **run_condition:**  -value-  This is an optional parameter. Include this parameter when another boolean parameter is required to control running the part. *Replace the value with True to force the part to run.*
 
-### YAML Example Files
-[YAML Example Files](yaml-examples/README.md)
+### [YAML Example Files](yaml-examples/README.md)
 
