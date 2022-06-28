@@ -21,18 +21,15 @@ parts:
         threaded:   True
 
     Controller:
-        class:      MyJoystickController
-        module:     parts.my_joystick
-        enable:     True
+        module: donkeycar.parts.controller
+        enable: True
+        class: LocalWebController
         args:
-            throttle_dir:           -1.0 # Direction
-            throttle_scale:          0.6 # Scaling, must be positive
-            steering_scale:          1.0 # Scaling and direction
-            auto_record_on_throttle: True
-            ai_throttle_multiplier:  1.0
-        inputs:     [cam/image_array] 
-        outputs:    [user/angle, user/throttle, user/mode, recording]
-        threaded:   True
+            port: cfg.WEB_CONTROL_PORT
+            mode: cfg.WEB_INIT_MODE
+        inputs:  [cam/image_array, tub/num_records] 
+        outputs: [user/angle, user/throttle, user/mode, recording]
+        threaded: True
     
     PilotCondition:
         module: parts.helpers
