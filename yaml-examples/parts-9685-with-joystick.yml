@@ -3,6 +3,7 @@
 # set enable to False to disable the part from inclusion into the vehicle
 
 # Donkey Car standard build using 9685 PWM controller board
+# Custom Joystick controller
 
 parts:
     Camera:
